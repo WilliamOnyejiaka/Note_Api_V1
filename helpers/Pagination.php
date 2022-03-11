@@ -19,7 +19,7 @@ class Pagination {
     $this->needed_attributes = $needed_attributes;
     // $this->user_id = $user_id;
     $this->page = $params->page?$params->page : 1;
-    $this->results_per_page = $params->results_per_page? $params->results_per_page:10;
+    $this->results_per_page = $params->results_per_page? $params->results_per_page:5;
     $this->user_id = $params->user_id ? $params->user_id : null;
 
 
