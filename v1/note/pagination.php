@@ -15,17 +15,28 @@ ini_set("display_errors",1);
             die();
         }
 
+include_once("./../../config/config.php");
 include_once("./../../config/database.php");
 include_once("./../../helpers/Pagination.php");
-
+// require './../../vendor/autoload.php';
+// $dotenv = Dotenv\Dotenv::createImmutable(dirname(dirname(__DIR__)));
+// $dotenv->load();
 
 $page = isset($_GET['page'])? $_GET['page']: 1;
 $results_per_page = isset($_GET['results_per_page'])? $_GET['results_per_page']: 10;
 
-
-$connection = (new Database("localhost","root","","note_db"))->connect();
+// $host = $_ENV['DB_HOST'];
+// $username = $_ENV['DB_USERNAME'];
+// $password = $_ENV['DB_PASSWORD'];
+// $database_name = $_ENV['DB_DATABASE'];
+$connection = (new Database($host,$username,$password,$database_name))->connect();
 $needed_attributes = ["id","title","body"];
-$data = (new Pagination($connection,"notes",31,$needed_attributes,$page,$results_per_page))->meta_data();
+$params = array(
+  'page'=> $page ,
+  'results_per_page' => $results_per_page ,
+  'user_id' => 30
+);
+$data = (new Pagination($connection,"notes",$needed_attributes,$params))->meta_data();
 
 echo json_encode($data);
 
