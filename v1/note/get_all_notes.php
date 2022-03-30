@@ -17,6 +17,8 @@ if ($method == "OPTIONS") {
 require './../../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
+
+include_once("./../../config/config.php");
 include_once("./../../helpers/status_codes.php");
 include_once("./../../models/User.php");
 include_once("./../../config/database.php");
@@ -44,7 +46,8 @@ if($_SERVER['REQUEST_METHOD'] == "GET"){
         ));
       }
       if($user_id){
-        $connection = (new Database('localhost','root','','note_db'))->connect();
+        // $connection = (new Database('localhost','root','','note_db'))->connect();
+        $connection = (new Database($host,$username,$password,$database_name))->connect();
         $note = new Note($connection);
         $user_notes = $note->get_all_notes($user_id);
 

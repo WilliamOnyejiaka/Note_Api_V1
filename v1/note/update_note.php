@@ -16,6 +16,7 @@ if ($method == "OPTIONS") {
 require './../../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
+include_once("./../../config/config.php");
 include_once("./../../helpers/status_codes.php");
 include_once("./../../models/User.php");
 include_once("./../../config/database.php");
@@ -53,8 +54,9 @@ if($_SERVER['REQUEST_METHOD'] == "PUT") {
             'error' => true,
             'message' => "all values needed"
           ));
-        }else {
-          $connection = (new Database('localhost','root','','note_db'))->connect();
+        // }else {
+          // $connection = (new Database('localhost','root','','note_db'))->connect();
+          $connection = (new Database($host,$username,$password,$database_name))->connect();
           $note = new Note($connection);
           if($note->update_note($user_id,$body->id,$body->title,$body->body)){
             http_response_code($HTTP_200_OK);

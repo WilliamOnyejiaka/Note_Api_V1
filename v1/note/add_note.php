@@ -16,6 +16,7 @@ if ($method == "OPTIONS") {
 require './../../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
+include_once("./../../config/config.php");
 include_once("./load.php");
 // include_once("./../../helpers/status_codes.php");
 // include_once("./../../models/User.php");
@@ -54,7 +55,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             'message' => "All values needed",
           ));
         }else {
-          $connection = (new Database('localhost','root','','note_db'))->connect();
+          // $connection = (new Database('localhost','root','','note_db'))->connect();
+          $connection = (new Database($host,$username,$password,$database_name))->connect();
           $note = new Note($connection);
           if($note->create_note($body->title,$body->body,$user_id)){
             http_response_code($HTTP_201_CREATED);

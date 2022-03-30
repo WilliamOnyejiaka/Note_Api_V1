@@ -17,6 +17,7 @@ if ($method == "OPTIONS") {
 require './../../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
+include_once("./../../config/config.php");
 include_once("./../../helpers/status_codes.php");
 include_once("./../../models/User.php");
 include_once("./../../config/database.php");
@@ -50,7 +51,8 @@ if($_SERVER['REQUEST_METHOD'] == "GET"){
             'message' => "note id should be numeric"
           ));
         }else if($note_id) {
-          $connection = (new Database('localhost','root','','note_db'))->connect();
+          // $connection = (new Database('localhost','root','','note_db'))->connect();
+          $connection = (new Database($host,$username,$password,$database_name))->connect();
           $note = new Note($connection);
           $user_note = $note->get_note($user_id,$note_id);
 

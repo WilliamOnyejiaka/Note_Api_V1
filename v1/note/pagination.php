@@ -18,6 +18,8 @@ ini_set("display_errors",1);
 include_once("./../../config/config.php");
 include_once("./../../config/database.php");
 include_once("./../../helpers/Pagination.php");
+include_once("./../../helpers/SearchPagination.php");
+
 // require './../../vendor/autoload.php';
 // $dotenv = Dotenv\Dotenv::createImmutable(dirname(dirname(__DIR__)));
 // $dotenv->load();
@@ -34,9 +36,24 @@ $needed_attributes = ["id","title","body"];
 $params = array(
   'page'=> $page ,
   'results_per_page' => $results_per_page ,
-  'user_id' => 30
+  'user_id' => 32
 );
-$data = (new Pagination($connection,"notes",$needed_attributes,$params))->meta_data();
+// $data = (new Pagination($connection,"notes",$needed_attributes,$params))->meta_data();
+$data = (new SearchPagination($connection,"notes",$needed_attributes,'dog',$params))->meta_data();
+// $query = "SELECT * FROM notes WHERE user_id = 32 AND body LIKE '%JWT%' OR title LIKE '%JWT%' ";
+// $stmt = $connection->query($query);
+// // var_dump($stmt->fetch_assoc());
+// $data = [];
+// while ($row = $stmt->fetch_assoc()) {
+//   $data[] = array(
+//     'id' => $row['id'],
+//     'title' => $row['title'],
+//     'body' => $row['body'],
+//     'user_id' => $row['user_id']
+//   );
+//
+// }
+
 
 echo json_encode($data);
 

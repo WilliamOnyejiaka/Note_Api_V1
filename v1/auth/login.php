@@ -17,12 +17,15 @@ if ($method == "OPTIONS") {
 require './../../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 
+include_once("./../../config/config.php");
 include_once("./../../helpers/status_codes.php");
 include_once("./../../models/User.php");
 include_once("./../../config/database.php");
 
 if($_SERVER['REQUEST_METHOD'] == "GET") {
-  $user = new User((new Database("localhost","root","","note_db"))->connect());
+  // $user = new User((new Database("localhost","root","","note_db"))->connect());
+  // $connection = (new Database($host,$username,$password,$database_name))->connect();
+  $user = new User((new Database($host,$username,$password,$database_name))->connect());
   $email = $_SERVER['PHP_AUTH_USER'];
   $password = $_SERVER['PHP_AUTH_PW'];
 

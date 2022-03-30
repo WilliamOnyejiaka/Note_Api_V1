@@ -2,14 +2,12 @@
 
 class Pagination {
 
-  private $connection;
+  protected $connection;
   private $page;
   private $results_per_page;
   private $tbl_name;
   private $needed_attributes;
   private $user_id;
-
-  // ,$user_id,$needed_attributes,$page=1,$results_per_page=10
 
   public function __construct($connection,$tbl_name,$needed_attributes,$params){
     $this->connection = $connection;
@@ -33,21 +31,20 @@ class Pagination {
     return $stmt;
   }
 
-  private function tbl_row_length(){
+  protected function tbl_row_length(){
     return $this->get_data()->num_rows;
   }
 
-  private function get_page_results(){
-    // $number_of_results = $this->tbl_row_length();
+  protected function get_page_results(){
     $page_results = ($this->page-1) * $this->results_per_page;
     return $page_results;
   }
 
-  private function get_number_of_results(){
+  protected function get_number_of_results(){
     return $this->tbl_row_length();
   }
 
-  private function get_number_of_pages(){
+  protected function get_number_of_pages(){
     $number_of_results = $this->tbl_row_length();
     $number_of_pages = ceil($number_of_results/$this->results_per_page);
     return $number_of_pages;
@@ -80,11 +77,7 @@ class Pagination {
     return $data;
   }
 
-  private function create_page_properties(){
-    // [$next_page] = null;
-    // $prev_page = null;
-    // $has_next = false;
-    // $has_prev = false;
+  protected function create_page_properties(){
     [$next_page,$prev_page,$has_next,$has_prev] = [null,null,false,false];
 
     if($this->page <= 1 && $this->get_number_of_pages() <= 1){

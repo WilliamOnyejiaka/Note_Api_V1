@@ -14,6 +14,8 @@ if ($method == "OPTIONS") {
   die();
 }
 
+include_once("./../../config/config.php");
+
 include_once("./../../helpers/status_codes.php");
 include_once("./../../models/User.php");
 include_once("./../../config/database.php");
@@ -21,7 +23,7 @@ include_once("./../../helpers/email_is_valid.php");
 
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-  $user = new User((new Database("localhost","root","","note_db"))->connect());
+  $user = new User((new Database($host,$username,$password,$database_name))->connect());
   $body = json_decode(file_get_contents("php://input"));
 
   if(empty($body->name) || empty($body->email) || empty($body->password)){
