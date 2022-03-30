@@ -5,8 +5,9 @@ include_once("Pagination.php");
 class SearchPagination extends Pagination {
 
   private $keyword;
+  private $search_params;
 
-  public function __construct($connection,$tbl_name,$needed_attributes,$keyword,$params){
+  public function __construct($connection,$tbl_name,$needed_attributes,$keyword,$search_params,$params){
     parent::__construct($connection,$tbl_name,$needed_attributes,$params);
     $this->connection = $connection;
     $this->tbl_name = $tbl_name;
@@ -15,6 +16,7 @@ class SearchPagination extends Pagination {
     $this->results_per_page = !empty($params['results_per_page']) && $params['results_per_page'] >= 1 ? $params['results_per_page']:10;
     $this->user_id = !empty($params['user_id']) ? $params['user_id'] : null;
     $this->keyword = $keyword;
+    $this->search_params = $search_params;
   }
 
   protected function tbl_row_length(){
@@ -27,9 +29,25 @@ class SearchPagination extends Pagination {
     return $number_of_pages;
   }
 
+  private function get_search_string(){
+    $search_string = "";
+    for($i = 0;$i < count($this->search_params);$i++) {
+      $feild = $this->search_params[$i] ;
+      if($i == count($this->search_params)-1){
+        $search_string .= "$feild LIKE '%$this->keyword%'";
+      }else{
+        $search_string .= "$feild LIKE '%$this->keyword%' OR ";
+      }
+    }
+    return $search_string;
+  }
+
   private function get_data(){
-    $query = "SELECT * FROM $this->tbl_name WHERE user_id = ? AND (body LIKE '$this->keyword' OR title LIKE '$this->keyword')";
+    $search_string = $this->get_search_string();
+    $query = "SELECT * FROM $this->tbl_name WHERE user_id = ? AND ($search_string)";
+
     $stmt = $this->connection->prepare($query);
+
     $stmt->bind_param("i",$this->user_id);
     $stmt->execute();
     return $stmt->get_result();
@@ -37,7 +55,8 @@ class SearchPagination extends Pagination {
 
   private function get_page_data(){
     $page_results = $this->get_page_results();
-    $query = "SELECT * FROM $this->tbl_name WHERE user_id = ? AND (body LIKE '%$this->keyword%' OR title LIKE '%$this->keyword%') LIMIT $page_results, $this->results_per_page";
+    $search_string = $this->get_search_string();
+    $query = "SELECT * FROM $this->tbl_name WHERE user_id = ? AND ($search_string) LIMIT $page_results, $this->results_per_page";
     $stmt = $this->connection->prepare($query);
     $stmt->bind_param("i",$this->user_id);
     $stmt->execute();

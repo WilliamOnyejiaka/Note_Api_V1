@@ -39,7 +39,10 @@ $params = array(
   'user_id' => 32
 );
 // $data = (new Pagination($connection,"notes",$needed_attributes,$params))->meta_data();
-$data = (new SearchPagination($connection,"notes",$needed_attributes,'dog',$params))->meta_data();
+$body = "body";
+$title = "title";
+$search_params = [$body,$title];
+$data = (new SearchPagination($connection,"notes",$needed_attributes,'get',$search_params,$params))->meta_data();
 // $query = "SELECT * FROM notes WHERE user_id = 32 AND body LIKE '%JWT%' OR title LIKE '%JWT%' ";
 // $stmt = $connection->query($query);
 // // var_dump($stmt->fetch_assoc());
